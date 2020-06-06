@@ -8,50 +8,43 @@ public class AdvancedRobotRace {
 	// Re-do the robot race recipe from level 3 module 0. 
 	// This time, use threads to make all of the robots go at the same time.
 	
-	// 1. make a main method
 		public static void main(String[] args) {
-			int randrobs = new Random().nextInt(10);
-
-			// 2. create an array of 5 robots.
 			Robot[] robs = new Robot[5];
-			// 3. use a for loop to initialize th0e robots.
-			for (int i = 0; i < robs.length; i++) {
-				robs[i] = new Robot();
+						
+			for (int j = 0; j < robs.length; j++) {
+				robs[j] = new Robot(100*j + 100, 500);
+				robs[j].setSpeed(new Random().nextInt(10));
 			}
-			// 4. make each robot start at the bottom of the screen, side by side, facing up
-			for (int i = 0; i < robs.length; i++) {
-				robs[i].moveTo(100 * i + 100, 500);
-				robs[i].setAngle(0);
-				robs[i].setSpeed(2);
-			}
-			// 5. use another for loop to iterate through the array and make each robot move a random amount less than 50
-			boolean finished = false;
+		
+		Thread one = new Thread(()->robs[0].move(500));
+		Thread two = new Thread(()->robs[1].move(500));
+		Thread three = new Thread(()->robs[2].move(500));
+		Thread four = new Thread(()->robs[3].move(500));
+		Thread five = new Thread(()->robs[4].move(500));
+				
+				one.start();
+				two.start();
+				three.start();
+				four.start();
+				five.start();
 			
-			while (!finished) {
-				for (int i = 0; i < robs.length; i++) {
-					int randistance = new Random().nextInt(50);
-					robs[i].move(randistance);
-						if (robs[i].getY() <= 100) {
-							finished = true;
-						}
-				} 
-			} 
-			for (int i = 0; i < robs.length; i++) {
-				System.out.println(robs[i].getY());
-			}
-			
-			// 6. use a while loop to repeat step 5 until a robot has reached the top of the screen.
-			
-			
-			// 7. declare that robot the winner and throw it a party!
-			for (int i = 0; i < robs.length; i++) {
-				if (robs[i].getY() <= 100) {
-					System.out.println("Robot #" + i + " has won! Throw a party!");
+			int winner = -1;	
+			while (winner == -1) {
+				for (int k = 0; k < robs.length; k++) {
+					if (robs[k].getY() <= 100) {
+						winner = k;
+						break;
+					}
 				}
 			}
-			// 8. try different races with different amounts of robots.
 			
-			// 9. make the robots race around a circular track.
+			for (int j = 0; j < robs.length; j++) {
+				robs[j].setSpeed(0);
+			}
+			
+			robs[winner].sparkle();
+			System.out.println("Robot #" + (winner+1) + " is the winner!");
+			
 				
 		}
 }
